@@ -1,12 +1,32 @@
 <template>
   <v-layout row wrap>
+    <v-dialog v-model="isShow">
+      <v-card>
+        <v-card-text>
+          <table>
+            <tr>
+              <th>Id</th>
+              <th>Mile stone</th>
+              <th>Status</th>
+            </tr>
+            <tr v-for="i in mileStones" :key="i.id">
+              <td>{{i.id}}</td>
+              <td>{{i.name}}</td>
+              <td>{{i.completedDate}}
+                <v-btn @click="onUpdateMileStone(i.id,i.tndId)">completed</v-btn>
+              </td>
+            </tr>
+          </table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-flex xs12 sm12 md12>
       <v-alert v-model="hasAlert" dismissible :type="alertType">{{alert}}</v-alert>
     </v-flex>
     <v-flex xs12 sm12 md12>
       <v-card>
         <v-card-title>
-          <h1>View and update vehicles</h1>
+          <h1>View and update plans</h1>
         </v-card-title>
         <v-card-text>
 
@@ -15,21 +35,21 @@
           <v-data-table :items="items" :headers="headers" :search="search" disable-initial-sort  :pagination.sync="pagination">
             <template slot="items" slot-scope="props">
               <td>{{props.item.id}}</td>
-              <td>{{props.item.category.name}}</td>
-              <td>{{props.item.make}}</td>
-              <td>{{props.item.year}}</td>
-              <td>{{props.item.color}}</td>
-              <td>{{props.item.vin}}</td>
-              <td>{{props.item.tankVolume}}</td>
-              <td>{{props.item.fuelLevel}}</td>
+
+              <td>{{props.item.user.fullName}}</td>
+              <td>{{props.item.timePeriod}} Months</td>
+              <td>{{props.item.investment}} LKR</td>
               <td>{{props.item.notes}}</td>
+              <td>{{props.item.deadlineDate}}</td>
+              <td>{{props.item.completedPercentage}} %</td>
+
               <td>
                 <v-btn
                   class="warning"
-                  @click="$router.push({path:'/vehicle',query:{id:props.item.id}})"
+                  @click="onUpdate(props.item.id)"
                 >Update</v-btn>
               </td>
-              <td>
+              <!-- <td>
                 <v-btn
                   @click="PUT('vehicle',props.item.status,props.item.id)"
                   :class="{'error':props.item.status}"
@@ -39,7 +59,7 @@
                 </v-btn>
               </td>
               <td>{{props.item.createdAt}}</td>
-              <td>{{props.item.updatedAt}}</td>
+              <td>{{props.item.updatedAt}}</td> -->
             </template>
           </v-data-table>
         </v-card-text>
@@ -62,41 +82,27 @@ export default {
       items: [],
       headers: [
         { text: 'Id', value: 'id' },
-        { text: 'Category', value: 'category.name' },
-        { text: 'Model', value: 'make' },
-        { text: 'Year', value: 'year' },
-        { text: 'Color', value: 'color' },
-        { text: 'Registration number', value: 'vin' },
-        { text: 'Tank Volume (Lt.)', value: 'tankVolume' },
-        { text: 'Fuel level', value: 'fuelLevel' },
+        { text: 'User', value: 'user.fullName' },
+        { text: 'Time Period', value: 'timePeriod' },
+        { text: 'Investment', value: 'investment' },
         { text: 'Notes', value: 'notes' },
-        {
-          text: 'Update',
-          value: null,
-          sortable: false,
-        },
-        {
-          text: 'Change status',
-          value: 'status',
-        },
-        {
-          text: 'createdAt',
-          value: 'createdAt',
-        },
-        {
-          text: 'updatedAt',
-          value: 'updatedAt',
-        },
+        { text: 'Deadline', value: 'deadlineDate' },
+        { text: 'Progress', value: 'completedPercentage' },
+        { text: 'Update', value: 'update' },
+        // { text: 'Notes', value: 'notes' },
+
       ],
       alertType: 'error',
       hasAlert: false,
       alert: '',
+      mileStones: [],
+      isShow: false,
     };
   },
   methods: {
     async GET() {
       try {
-        const data = await this.$http.get('vehicle');
+        const data = await this.$http.get('tnd');
         this.items = data.data;
       } catch (error) {
         this.alertType = 'error';
@@ -104,9 +110,22 @@ export default {
         this.hasAlert = false;
       }
     },
-    async PUT(model_name, status, id) {
+    async onUpdate(id) {
       try {
-        await this.$http.put('common', { model_name, status: !status, id });
+        const data = await this.$http.get(`tnd/milestones/${id}`);
+        this.mileStones = data.data;
+        this.isShow = true;
+      } catch (error) {
+        this.alertType = 'error';
+        this.alert = 'Status change failed!';
+        this.hasAlert = true;
+      }
+    },
+    async onUpdateMileStone(id, tndId) {
+      try {
+        await this.$http.put(`tnd/${id}/${tndId}`);
+        // this.mileStones = data.data;
+        this.isShow = false;
         this.GET();
       } catch (error) {
         this.alertType = 'error';
@@ -117,3 +136,8 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+
+</style>
