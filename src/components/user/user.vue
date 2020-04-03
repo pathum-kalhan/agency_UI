@@ -184,7 +184,6 @@ export default {
         && errors.push('Please enter a valid contact number!')
       ) { return errors; }
       return errors;
-      return errors;
     },
     contactNumber2Errors() {
       const errors = [];
@@ -193,7 +192,6 @@ export default {
         !this.$v.contactNumber2.phoneNumberValidator
         && errors.push('Please enter a valid contact number!')
       ) { return errors; }
-      return errors;
       return errors;
     },
     firstNameErrors() {

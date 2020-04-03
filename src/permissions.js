@@ -48,15 +48,15 @@ module.exports = {
         { text: 'Jobs list', path: '/jobsList' },
       ],
     },
-    // {
-    //   icon: 'fa-angle-up',
-    //   'icon-alt': 'fa-angle-down',
-    //   text: 'Estimates management',
-    //   children: [
-    //     { text: 'Create an estimate', path: '/estimate' },
-    //     { text: 'Estimates list', path: '/estimatesList' },
-    //   ],
-    // },
+    {
+      icon: 'fa-angle-up',
+      'icon-alt': 'fa-angle-down',
+      text: 'Calls management',
+      children: [
+        { text: 'Add call logs', path: '/calls' },
+        { text: 'Calls list', path: '/callLogs' },
+      ],
+    },
 
     { icon: 'fas fa-key', text: 'Reset password', path: '/resetPassword' },
 

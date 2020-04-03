@@ -10,8 +10,8 @@ import attendance from './components/attendance/attendance.vue';
 import viewAttendance from './components/attendance/viewAttendance.vue';
 import expenses from './components/expenses/expenses.vue';
 import viewExpenses from './components/expenses/viewExpenses.vue';
-import viewFuel from './components/fuel/viewFuel.vue';
-import fuelLogs from './components/fuel/fuelLogs.vue';
+import calls from './components/callLogs/callLogs.vue';
+import callsList from './components/callLogs/viewLogs.vue';
 import estimate from './components/estimate/estimate.vue';
 import estimatesList from './components/estimate/estimatesList.vue';
 import resetPassword from './components/common/resetPassword.vue';
@@ -101,14 +101,14 @@ const routes = [
     meta: { permissions: ['admin', 'staff', 'manager', 'driver'] },
 
   }, {
-    path: '/viewFuel',
-    component: viewFuel,
+    path: '/calls',
+    component: calls,
     meta: {
       permissions: ['admin', 'staff', 'manager', 'driver'],
     },
   }, {
-    path: '/fuelLogs',
-    component: fuelLogs,
+    path: '/callLogs',
+    component: callsList,
     meta: {
       permissions: ['admin', 'staff', 'manager', 'driver'],
     },
