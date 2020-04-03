@@ -12,8 +12,8 @@ import expenses from './components/expenses/expenses.vue';
 import viewExpenses from './components/expenses/viewExpenses.vue';
 import calls from './components/callLogs/callLogs.vue';
 import callsList from './components/callLogs/viewLogs.vue';
-import estimate from './components/estimate/estimate.vue';
-import estimatesList from './components/estimate/estimatesList.vue';
+import customer from './components/customer/customer.vue';
+import customerList from './components/customer/customerList.vue';
 import resetPassword from './components/common/resetPassword.vue';
 
 import TnD from './components/TnD/TnD.vue';
@@ -113,13 +113,13 @@ const routes = [
       permissions: ['admin', 'staff', 'manager', 'driver'],
     },
   }, {
-    path: '/estimate',
-    component: estimate,
+    path: '/customer',
+    component: customer,
     meta: { permissions: ['admin', 'staff', 'manager', 'driver'] },
 
   }, {
     path: '/viewMaintence',
-    component: estimatesList,
+    component: customerList,
     meta: { permissions: ['admin', 'staff', 'manager', 'driver'] },
 
   },

@@ -15,6 +15,15 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
+      text: 'Customer management',
+      children: [
+        { text: 'Create a customer', path: '/customer' },
+        { text: 'Customers list', path: '/customerList' },
+      ],
+    },
+    {
+      icon: 'fa-angle-up',
+      'icon-alt': 'fa-angle-down',
       text: 'Expenses management',
       children: [
         { text: 'Record expenses', path: '/expenses' },

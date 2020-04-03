@@ -4,86 +4,43 @@
       <v-form ref="tripForm">
         <v-card>
           <v-card-title>
-            <h1 v-if="component_status">Create a maintenance job</h1>
-            <h1 v-else>Update the maintenance job</h1>
+            <h1 v-if="component_status">Create a customer</h1>
+            <h1 v-else>Update a customer</h1>
           </v-card-title>
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs12 sm12 md6>
-                <v-autocomplete
-                  label="Select a vehicle"
-                  v-model="vehicleId"
-                  :items="vehicles"
-                  item-value="id"
-                  item-text="vehicleName"
-                  class="required"
-                  outline
-                ></v-autocomplete>
+                <v-text-field label="Customer Name" v-model="name" outline counter="15"></v-text-field>
               </v-flex>
               <v-flex xs12 sm12 md6>
-                <v-text-field label="Payment" v-model="allowances" outline class="required"></v-text-field>
+           <v-text-field label ="Email"
+            v-model="email"
+             outline
+             class="required"
+              type="email"
+               :error-messages="emailErrors"
+               @blur="$v.email.$touch()"
+               > </v-text-field>
 
+              </v-flex>
+              <v-flex xs12 sm12 md6>
+                <v-text-field label="Name of the contact person" v-model="contactPerson" outline counter="15"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm12 md6>
+                <v-text-field label="Designation of the contact person" v-model="designation" outline counter="15"></v-text-field>
+              </v-flex>
 
+              <v-flex xs12 sm12 md6>
+                <v-textarea
+                  label="Address"
+                  outline
+                  v-model="address"
+                  :counter="300"
+                  :error-messages="notesErrors"
+                  @input="$v.notes.$touch()"
+                ></v-textarea>
               </v-flex>
-              <v-flex xs11 sm6>
-                <v-menu
-                  ref="menu1"
-                  v-model="menu1"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="startFrom"
-                      label="Start from"
-                      append-icon="fa-calendar-alt"
-                      class="required"
-                      v-on="on"
-                      outline
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="startFrom"
-                    no-title
-                    @input="menu1 = false"
-                    :min="$moment().format('YYYY-MM-DD')"
-                  ></v-date-picker>
-                </v-menu>
-              </v-flex>
-              <v-flex xs11 sm6>
-                <v-menu
-                  ref="menu2"
-                  v-model="menu2"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="stopAt"
-                      label="Stop at"
-                      append-icon="fa-calendar-alt"
-                      class="required"
-                      v-on="on"
-                      outline
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="stopAt"
-                    no-title
-                    @input="menu2 = false"
-                    :min="$moment().format('YYYY-MM-DD')"
-                  ></v-date-picker>
-                </v-menu>
-              </v-flex>
-              <v-flex xs12 sm12 md12>
+              <v-flex xs12 sm12 md6>
                 <v-textarea
                   label="Notes"
                   outline
@@ -92,6 +49,29 @@
                   :error-messages="notesErrors"
                   @input="$v.notes.$touch()"
                 ></v-textarea>
+              </v-flex>
+              <v-flex xs12 sm12 md6>
+                <v-subheader>
+                  Customer type
+                </v-subheader>
+                <v-radio-group row v-model="status">
+            <v-radio value="Company" label="Company" color="blue"></v-radio>
+            <v-radio value="Individual" label="Individual" color="red"></v-radio>
+            <v-radio value="Agency" label="Marketing Agency" color="green"></v-radio>
+
+
+        </v-radio-group>
+              </v-flex>
+              <v-flex xs12 sm12 md6>
+                <v-subheader>
+                  Locality
+                </v-subheader>
+                <v-radio-group row v-model="status">
+
+            <v-radio value="Local" label="Local" color="blue"></v-radio>
+            <v-radio value="Foreign" label="Foreign" color="red"></v-radio>
+
+        </v-radio-group>
               </v-flex>
 
 
@@ -171,6 +151,11 @@ export default {
       alertType: 'success',
       alertingMessage: '',
       isPaid: true,
+
+      name: '',
+      email: '',
+      contactPerson: '',
+      designation: '',
     };
   },
   methods: {
