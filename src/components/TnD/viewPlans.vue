@@ -3,7 +3,7 @@
     <v-dialog v-model="isShow">
       <v-card>
         <v-card-text>
-          <table>
+          <table class="tbl">
             <tr>
               <th>Id</th>
               <th>Mile stone</th>
@@ -12,8 +12,9 @@
             <tr v-for="i in mileStones" :key="i.id">
               <td>{{i.id}}</td>
               <td>{{i.name}}</td>
-              <td>{{i.completedDate}}
-                <v-btn @click="onUpdateMileStone(i.id,i.tndId)">completed</v-btn>
+              <td>
+                <v-btn @click="onUpdateMileStone(i.id,i.tndId)" v-if="!i.completedDate">completed</v-btn>
+                <p v-else>Completed in {{i.completedDate}}</p>
               </td>
             </tr>
           </table>
@@ -47,19 +48,10 @@
                 <v-btn
                   class="warning"
                   @click="onUpdate(props.item.id)"
+                  :disabled="Number(props.item.completedPercentage) == 100 || props.item.deadlineDate < new Date()"
                 >Update</v-btn>
               </td>
-              <!-- <td>
-                <v-btn
-                  @click="PUT('vehicle',props.item.status,props.item.id)"
-                  :class="{'error':props.item.status}"
-                >
-                  <span v-if="props.item.status">Disable</span>
-                  <span v-else>Enable</span>
-                </v-btn>
-              </td>
-              <td>{{props.item.createdAt}}</td>
-              <td>{{props.item.updatedAt}}</td> -->
+
             </template>
           </v-data-table>
         </v-card-text>
@@ -138,6 +130,16 @@ export default {
 </script>
 
 <style scoped>
+.tbl{
+  border-collapse: collapse;
+  width:100%;
+  border: 1px solid black;
 
+}
+
+.tbl th, .tbl td {
+  border: 1px solid black;
+  padding: 15px;
+}
 
 </style>

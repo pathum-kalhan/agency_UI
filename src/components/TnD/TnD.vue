@@ -25,11 +25,13 @@
 
               <v-flex xs12 sm12 md12>
                 <v-subheader class="required">Time period *</v-subheader>
-                {{timePeriod}}
+                <!-- {{timePeriod}} -->
                 <v-radio-group v-model="timePeriod" row>
                   <v-radio label="3 Months" value=3></v-radio>
                   <v-radio label="6 Months" value=6></v-radio>
                   <v-radio label="12 Months" value=12></v-radio>
+                  <v-radio label="18 Months" value=18></v-radio>
+                  <v-radio label="24 Months" value=24></v-radio>
 
                 </v-radio-group>
               </v-flex>
@@ -50,21 +52,22 @@
                   :error-messages="investmentErrors"
                   @input="$v.investment.$touch()"
                    class="required"
+                   type="number"
                 ></v-text-field>
 
                 <v-text-field
                   outline
                   label="Mile stones"
                   v-model="mileStone"
-
+                  counter="30"
                    class="required"
                 ></v-text-field>
-                <v-btn @click="addMileStone()">add</v-btn>
+                <v-btn @click="addMileStone()" :disabled="!mileStone || mileStone.length > 30">add</v-btn>
                 <ul>
 
                   <li v-for="(i,index) in mileStones" :key="i">
                     {{i}}
-                    {{index}} <v-btn @click="removeMileStone(index)">delete</v-btn>
+                    <v-btn @click="removeMileStone(index)">delete</v-btn>
                   </li>
                 </ul>
 
@@ -226,6 +229,7 @@ export default {
     },
     addMileStone() {
       this.mileStones.push(this.mileStone);
+      this.mileStone = '';
     },
     removeMileStone(index) {
       this.mileStones.splice(index, 1);
