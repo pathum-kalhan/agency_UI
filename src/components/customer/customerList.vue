@@ -7,20 +7,32 @@
     <v-flex xs12 sm12 md12>
       <v-card>
         <v-card-title>
-          <h1>View and update maintenance details</h1>
+          <h1>View and update customers</h1>
         </v-card-title>
         <v-card-text>
           <v-text-field label="Search" v-model="search" outline></v-text-field>
 
+
           <v-data-table :items="items" :headers="headers" :search="search" disable-initial-sort>
             <template slot="items" slot-scope="props">
 
-              <td>{{props.item['vehicle.vin']}}</td>
-              <td>{{props.item.startFrom}}</td>
-              <td>{{props.item.stopAt}}</td>
-              <td>{{props.item.payment}}</td>
+              <td>{{props.item.id}}</td>
+              <td>{{props.item.name}}</td>
+              <td>{{props.item.email}}</td>
+              <td>{{props.item.contactPerson}}</td>
+              <td>{{props.item.designation}}</td>
+
+
+              <td>{{props.item.address}}</td>
               <td>{{props.item.notes}}</td>
-              <td>{{props.item.createdAt}}</td>
+              <td>{{props.item.customerType}}</td>
+              <td>{{props.item.locality}}</td>
+              <td>
+                <v-btn
+                  class="warning"
+                  @click="$router.push({path:'/customer',query:{id:props.item.id}})"
+                >Update</v-btn>
+              </td>
 
             </template>
           </v-data-table>
@@ -43,13 +55,18 @@ export default {
       search: '',
       items: [],
       headers: [
-        { text: 'VIN', value: 'vehicle.vin' },
+        { text: 'Id', value: 'id' },
 
-        { text: 'From', value: 'startFrom' },
-        { text: 'To', value: 'stopAt' },
-        { text: 'Payment', value: 'payment' },
+        { text: 'Name', value: 'name' },
+        { text: 'Email', value: 'email' },
+        { text: 'Contact Person', value: 'contactPerson' },
+        { text: 'Designation', value: 'designation' },
+        { text: 'Address', value: 'address' },
         { text: 'Notes', value: 'notes' },
-        { text: 'createdAt', value: 'createdAt' },
+        { text: 'Customer Type', value: 'customerType' },
+        { text: 'Locality', value: 'locality' },
+
+        { text: 'Update', value: 'update' },
 
       ],
       alertType: 'error',
@@ -60,7 +77,7 @@ export default {
   methods: {
     async GET() {
       try {
-        const data = await this.$http.get('maintenance');
+        const data = await this.$http.get('customer');
         this.items = data.data;
       } catch (error) {
         this.alertType = 'error';

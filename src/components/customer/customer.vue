@@ -109,7 +109,7 @@
               :disabled="$v.$invalid"
             >create</v-btn>
 
-            <v-btn v-else class="error" @click="POST" :disabled="$v.$invalid">update</v-btn>
+            <v-btn v-else class="warning" @click="POST" :disabled="$v.$invalid">update</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -188,29 +188,19 @@ export default {
   },
   data() {
     return {
-      selectedPlaces: [],
-      places: '',
-      allowances: '',
-      startFrom: '',
-      menu: '',
-      driverId: '',
-      vehicleId: '',
-      vehicles: [],
+
       componetStatus: true,
       id: '',
 
-      items: [],
+
       address: '',
 
       notes: '',
-      drivers: [],
-      menu1: '',
-      menu2: '',
-      stopAt: '',
+
       hasAlert: false,
       alertType: 'success',
       alertingMessage: '',
-      isPaid: true,
+
 
       name: '',
       email: '',
@@ -247,24 +237,27 @@ export default {
           this.$router.push('/customerList');
         }
       } catch (error) {
-        if (error.response.status === 422) {
-          this.alertType = 'error';
-          this.alertingMessage = error.response.data.toString();
-          this.hasAlert = true;
-        }
+        this.alertType = 'error';
+        this.alertingMessage = 'Oops! Something went wrong.';
+        this.hasAlert = true;
       }
     },
     async GET_DATA(id) {
       try {
-        const data = await this.$http.get(`/place/${id}`);
+        const data = await this.$http.get(`customer/${id}`);
         this.id = data.data.id;
         this.name = data.data.name;
         this.address = data.data.address;
-        this.lat = data.data.lat;
-        this.lng = data.data.lng;
         this.notes = data.data.notes;
+        this.email = data.data.email;
+        this.contactPerson = data.data.contactPerson;
+        this.designation = data.data.designation;
+        this.customerType = data.data.customerType;
+        this.locality = data.data.locality;
       } catch (error) {
-        // alert('Error while loading the data from api...');
+        this.alertType = 'error';
+        this.alertingMessage = 'Error! While loading the data from API.';
+        this.hasAlert = true;
       }
     },
 
