@@ -24,13 +24,13 @@ import viewTnD from './components/TnD/viewPlans.vue';
 import categoryReport from './components/reports/categoryR.vue';
 import userR from './components/reports/userR.vue';
 import auditR from './components/reports/auditR.vue';
-import vehicleR from './components/reports/vehicleR.vue';
-import placeR from './components/reports/placeR.vue';
-import fuelR from './components/reports/fuelR.vue';
+import attendanceR from './components/reports/attendanceReport.vue';
+import customerReport from './components/reports/customerReport.vue';
+import expencesReport from './components/reports/expencesReport.vue';
 import maintaR from './components/reports/maintaR.vue';
 import financeR from './components/reports/financeR.vue';
 import summaryR from './components/reports/summaryR.vue';
-import tripR from './components/reports/tripR.vue';
+import callLogsReport from './components/reports/callLogsReport.vue';
 
 import backupDb from './components/backupDb.vue';
 
@@ -118,7 +118,7 @@ const routes = [
     meta: { permissions: ['admin', 'staff', 'manager', 'driver'] },
 
   }, {
-    path: '/viewMaintence',
+    path: '/customerList',
     component: customerList,
     meta: { permissions: ['admin', 'staff', 'manager', 'driver'] },
 
@@ -146,15 +146,15 @@ const routes = [
 
     },
   }, {
-    path: '/vehicleR',
-    component: vehicleR,
+    path: '/attendanceReport',
+    component: attendanceR,
     meta: {
       permissions: ['admin', 'manager'],
 
     },
   }, {
-    path: '/placeR',
-    component: placeR,
+    path: '/customerReport',
+    component: customerReport,
     meta: {
       permissions: ['admin', 'manager'],
 
@@ -167,8 +167,8 @@ const routes = [
 
   },
   {
-    path: '/fuelR',
-    component: fuelR,
+    path: '/expencesReport',
+    component: expencesReport,
     meta: {
       permissions: ['admin', 'manager'],
 
@@ -209,9 +209,9 @@ const routes = [
 
   },
   {
-    path: '/tripsR',
+    path: '/callLogsReport',
     name: 'tripsR',
-    component: tripR,
+    component: callLogsReport,
 
 
   },

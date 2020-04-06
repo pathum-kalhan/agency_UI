@@ -4,13 +4,21 @@
       <v-form ref="tripForm">
         <v-card>
           <v-card-title>
-            <h1 v-if="component_status">Create a customer</h1>
+            <h1 v-if="componetStatus">Create a customer</h1>
             <h1 v-else>Update a customer</h1>
           </v-card-title>
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs12 sm12 md6>
-                <v-text-field label="Customer Name" v-model="name" outline counter="15"></v-text-field>
+                <v-text-field
+                 label="Customer Name"
+                 v-model="name"
+                 outline
+                 counter="15"
+                 class="required"
+                 :error-messages="nameErrors"
+                 @input="$v.name.$touch()"
+                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm12 md6>
            <v-text-field label ="Email"
@@ -23,11 +31,27 @@
                > </v-text-field>
 
               </v-flex>
-              <v-flex xs12 sm12 md6>
-                <v-text-field label="Name of the contact person" v-model="contactPerson" outline counter="15"></v-text-field>
+             <v-flex xs12 sm12 md6>
+                <v-text-field
+                label="Name of the contact person"
+                v-model="contactPerson"
+                outline
+                counter="15"
+                class="required"
+                 :error-messages="contactPersonErrors"
+                 @input="$v.contactPerson.$touch()"
+                ></v-text-field>
               </v-flex>
               <v-flex xs12 sm12 md6>
-                <v-text-field label="Designation of the contact person" v-model="designation" outline counter="15"></v-text-field>
+                <v-text-field
+                label="Designation of the contact person"
+                v-model="designation"
+                outline
+                counter="15"
+                class="required"
+                 :error-messages="designationErrors"
+                 @input="$v.designation.$touch()"
+                ></v-text-field>
               </v-flex>
 
               <v-flex xs12 sm12 md6>
@@ -36,8 +60,8 @@
                   outline
                   v-model="address"
                   :counter="300"
-                  :error-messages="notesErrors"
-                  @input="$v.notes.$touch()"
+                  :error-messages="addressErrors"
+                  @input="$v.address.$touch()"
                 ></v-textarea>
               </v-flex>
               <v-flex xs12 sm12 md6>
@@ -54,7 +78,7 @@
                 <v-subheader>
                   Customer type
                 </v-subheader>
-                <v-radio-group row v-model="status">
+                <v-radio-group row v-model="customerType" >
             <v-radio value="Company" label="Company" color="blue"></v-radio>
             <v-radio value="Individual" label="Individual" color="red"></v-radio>
             <v-radio value="Agency" label="Marketing Agency" color="green"></v-radio>
@@ -66,7 +90,7 @@
                 <v-subheader>
                   Locality
                 </v-subheader>
-                <v-radio-group row v-model="status">
+                <v-radio-group row v-model="locality">
 
             <v-radio value="Local" label="Local" color="blue"></v-radio>
             <v-radio value="Foreign" label="Foreign" color="red"></v-radio>
@@ -79,7 +103,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              v-if="component_status"
+              v-if="componetStatus"
               class="success"
               @click="POST"
               :disabled="$v.$invalid"
@@ -97,34 +121,70 @@
 </template>
 
 <script>
-import { required, maxLength } from 'vuelidate/lib/validators';
+import { required, maxLength, email } from 'vuelidate/lib/validators';
 
 export default {
   computed: {
     notesErrors() {
       const errors = [];
       if (!this.$v.notes.$dirty) return errors;
-
-      !this.$v.notes.maxLength
-        && errors.push('Maximum length for the notes is 100.');
+      if (!this.$v.notes.maxLength) errors.push('Maximum length for the notes is 100.');
       return errors;
     },
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.name.$dirty) return errors;
+      if (!this.$v.name.required) errors.push('Customer name is required.');
+      if (!this.$v.name.maxLength) errors.push('Maximum length for the customer name is 15.');
+      return errors;
+    },
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      if (!this.$v.email.required && errors.push('Email is required.')) { return errors; }
+      if (!this.$v.email.email && errors.push('Please enter a valid email')) { return errors; }
+      return errors;
+    },
+    contactPersonErrors() {
+      const errors = [];
+      if (!this.$v.contactPerson.$dirty) return errors;
+      if (!this.$v.contactPerson.required && errors.push('Contact person name is required.')) ;
+      if (!this.$v.contactPerson.maxLength) errors.push('Maximum length for the contact person name is 15.');
+      return errors;
+    },
+    designationErrors() {
+      const errors = [];
+      if (!this.$v.designation.$dirty) return errors;
+      if (!this.$v.designation.required && errors.push('Designation is required.')) ;
+      if (!this.$v.designation.maxLength) errors.push('Maximum length for the designation is 15.');
+      return errors;
+    },
+    addressErrors() {
+      const errors = [];
+      if (!this.$v.address.$dirty) return errors;
+      if (!this.$v.address.maxLength) errors.push('Maximum length for the address is 300.');
+      return errors;
+    },
+
   },
   validations() {
     return {
-      vehicleId: { required },
-      // driverId: { required },
-      stopAt: { required },
-      startFrom: { required },
-      notes: { maxLength: maxLength(100) },
+      name: { required, maxLength: maxLength(15) },
+      email: { required, email },
+      contactPerson: { required, maxLength: maxLength(15) },
+      designation: { required, maxLength: maxLength(15) },
+      notes: { required, maxLength: maxLength(100) },
+      address: { required, maxLength: maxLength(300) },
+      customerType: { required },
+      locality: { required },
+
     };
   },
   mounted() {
     if (this.$route.query.id) {
-      this.component_status = false;
+      this.componetStatus = false;
       this.GET_DATA(this.$route.query.id);
     }
-    this.GET();
   },
   data() {
     return {
@@ -136,7 +196,7 @@ export default {
       driverId: '',
       vehicleId: '',
       vehicles: [],
-      component_status: true,
+      componetStatus: true,
       id: '',
 
       items: [],
@@ -156,35 +216,35 @@ export default {
       email: '',
       contactPerson: '',
       designation: '',
+      customerType: 'Individual',
+      locality: 'Local',
     };
   },
   methods: {
     async POST() {
       try {
-        let { allowances } = this;
-        if (!this.allowances) {
-          allowances = 0;
-        }
         const formData = {
-          vehicleId: this.vehicleId,
+          name: this.name,
+          email: this.email,
+          contactPerson: this.contactPerson,
+          designation: this.designation,
           notes: this.notes,
-          payment: allowances,
-          stopAt: this.stopAt,
-          startFrom: this.startFrom,
-          isPaid: this.isPaid,
+          address: this.address,
+          customerType: this.customerType,
+          locality: this.locality,
 
         };
 
-        if (this.component_status) {
-          const data = await this.$http.post('/maintenance', formData);
+        if (this.componetStatus) {
+          await this.$http.post('/customer', formData);
           this.$v.$reset();
           this.$refs.tripForm.reset();
           this.alertType = 'success';
-          this.alertingMessage = 'Job is created successfully.';
+          this.alertingMessage = 'Customer is created successfully.';
           this.hasAlert = true;
         } else {
-          await this.$http.put(`/place/${this.id}`, formData);
-          this.$router.push('/viewPlaces');
+          await this.$http.put(`/customer/${this.id}`, formData);
+          this.$router.push('/customerList');
         }
       } catch (error) {
         if (error.response.status === 422) {
@@ -204,26 +264,10 @@ export default {
         this.lng = data.data.lng;
         this.notes = data.data.notes;
       } catch (error) {
-        alert('Error while loading the data from api...');
+        // alert('Error while loading the data from api...');
       }
     },
-    async GET() {
-      try {
-        const data = await this.$http.get('vehicle');
-        data.data.forEach(e => (e.vehicleName = `${e.make} ${e.vin}`));
-        this.vehicles = data.data.filter(e => e.status);
-        const drivers = await this.$http.get('user');
-        drivers.data.forEach(e => (e.name = `${e.firstName} ${e.lastName}`));
-        this.drivers = drivers.data.filter(
-          e => e.role === 'driver' && e.status,
-        );
 
-        const places = await this.$http.get('place');
-        this.places = places.data.filter(e => e.status);
-      } catch (error) {
-        alert('Error while loading the data from api...');
-      }
-    },
   },
 };
 </script>

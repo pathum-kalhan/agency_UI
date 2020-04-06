@@ -78,10 +78,10 @@ module.exports = {
         { text: 'Audit report', path: '/auditR' },
 
         { text: 'User report', path: '/userR' },
-        // { text: 'Categories report', path: '/categoryR' },
-        // { text: 'Vehicles report', path: '/vehicleR' },
-        // { text: 'Places report', path: '/placeR' },
-        // { text: 'Trips report', path: '/tripsR' },
+        { text: 'Attendance report', path: '/attendanceReport' },
+        { text: 'Call logs report', path: '/callLogsReport' },
+        { text: 'Customer report', path: '/customerReport' },
+        { text: 'Expenses report', path: '/expencesReport' },
 
         // { text: 'Fuel report', path: '/fuelR' },
         // { text: 'Maintenance report', path: '/maintaR' },
