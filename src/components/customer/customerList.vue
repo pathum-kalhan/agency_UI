@@ -33,6 +33,15 @@
                   @click="$router.push({path:'/customer',query:{id:props.item.id}})"
                 >Update</v-btn>
               </td>
+              <td>
+                <v-btn
+                  @click="PUT(props.item.status,props.item.id)"
+                  :class="{'error':props.item.status,'success':!props.item.status}"
+                >
+                  <span v-if="props.item.status">Incativate</span>
+                  <span v-else>Activate</span>
+                </v-btn>
+              </td>
 
             </template>
           </v-data-table>
@@ -67,6 +76,10 @@ export default {
         { text: 'Locality', value: 'locality' },
 
         { text: 'Update', value: 'update' },
+        {
+          text: 'Change status',
+          value: 'status',
+        },
 
       ],
       alertType: 'error',
@@ -104,6 +117,14 @@ export default {
         this.alertType = 'error';
         this.alert = 'Status change failed!';
         this.hasAlert = true;
+      }
+    },
+    async PUT(status, id) {
+      try {
+        await this.$http.put('customer/status', { status: !status, id });
+        this.GET();
+      } catch (error) {
+        // alert('Status changing failed!');
       }
     },
   },
