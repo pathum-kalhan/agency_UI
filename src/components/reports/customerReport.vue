@@ -1,27 +1,27 @@
 <template>
-  <v-layout row wrap justify-center>
-    <v-flex xs12 sm12 md6>
+  <v-layout row wrap>
+    <v-flex>
       <v-card>
         <v-card-title>
-          <h1>Places Report</h1>
+          <h1>Customer Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
             <v-flex xs12 sm12 md12>
               <v-radio-group row v-model="status">
-                <v-radio label="Active" value="Active"></v-radio>
-                <v-radio label="Inactive" value="Inactive"></v-radio>
+                <v-radio label="Active" :value="true"></v-radio>
+                <v-radio label="Inactive" :value="false"></v-radio>
                 <v-radio label="All" value="All"></v-radio>
               </v-radio-group>
             </v-flex>
 
             <v-flex xs12 sm12 md6>
               <v-subheader>Created From</v-subheader>
-              <v-date-picker  v-model="dateFrom" :max="maxDate"></v-date-picker>
+              <v-date-picker  v-model="dateFrom" :max="maxDate" :landscape="true"></v-date-picker>
             </v-flex>
             <v-flex xs12 sm12 md6>
               <v-subheader>Created To</v-subheader>
-              <v-date-picker  v-model="dateTo" :max="maxDate"></v-date-picker>
+              <v-date-picker  v-model="dateTo" :max="maxDate" :landscape="true"></v-date-picker>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -30,7 +30,7 @@
             class="btn"
             :fetch="POST"
             :fields="json_fields"
-            name="placeReport.csv"
+            name="customerReport.csv"
             type="csv"
             :style=" $v.$invalid ? 'pointer-events:none;cursor: no-drop;' : 'pointer-events:auto;' "
           >Download Excel</JsonExcel>
@@ -71,10 +71,13 @@ export default {
       json_fields: {
         Id: 'id',
         Name: 'name',
-        Notes: 'notes',
+        Email: 'email',
+        ContactPerson: 'contactPerson',
+        Designation: 'designation',
         Address: 'address',
-        Latitude: 'lat',
-        Longitude: 'lng',
+        Notes: 'notes',
+        CustomerType: 'customerType',
+        Locality: 'locality',
         Status: 'status',
         CreatedAt: 'createdAt',
         UpdatedAt: 'updatedAt',
@@ -114,7 +117,7 @@ export default {
           this.hasAlert = true;
           return;
         }
-        const data = await this.$http.post('/reports/place', formData);
+        const data = await this.$http.post('/customer/report', formData);
         if (data.data.length === 0) {
           this.alertType = 'error';
           this.alert = 'No data available!';

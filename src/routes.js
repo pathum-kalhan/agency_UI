@@ -20,6 +20,10 @@ import TnD from './components/TnD/TnD.vue';
 import viewTnD from './components/TnD/viewPlans.vue';
 
 
+import Leave from './components/leaves/Leave.vue';
+import LeavesList from './components/leaves/LeavesList.vue';
+
+
 // reports
 import categoryReport from './components/reports/categoryR.vue';
 import userR from './components/reports/userR.vue';
@@ -60,14 +64,14 @@ const routes = [
 
   },
   {
-    path: '/item',
-    component: item,
+    path: '/leave',
+    component: Leave,
     meta: { permissions: ['admin', 'staff', 'manager'] },
 
   },
   {
-    path: '/itemList',
-    component: itemList,
+    path: '/leavesList',
+    component: LeavesList,
     meta: { permissions: ['admin', 'staff', 'manager'] },
 
   }, {

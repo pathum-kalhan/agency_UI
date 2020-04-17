@@ -6,7 +6,7 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'User management',
+      text: 'Users',
       children: [
         { text: 'Create an user', path: '/user' },
         { text: 'Users list', path: '/viewUsers' },
@@ -15,7 +15,7 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'Customer management',
+      text: 'Customers',
       children: [
         { text: 'Create a customer', path: '/customer' },
         { text: 'Customers list', path: '/customerList' },
@@ -24,7 +24,7 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'Expenses management',
+      text: 'Expenses',
       children: [
         { text: 'Record expenses', path: '/expenses' },
         { text: 'View expenses', path: '/viewExpenses' },
@@ -33,7 +33,7 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'Attendance management',
+      text: 'Attendance',
       children: [
         { text: 'Mark attendance', path: '/attendance' },
         { text: 'Attendance history', path: '/viewAttendance' },
@@ -51,7 +51,7 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'Job management',
+      text: 'Jobs',
       children: [
         { text: 'Create a job', path: '/job' },
         { text: 'Jobs list', path: '/jobsList' },
@@ -60,10 +60,19 @@ module.exports = {
     {
       icon: 'fa-angle-up',
       'icon-alt': 'fa-angle-down',
-      text: 'Calls management',
+      text: 'Calls',
       children: [
         { text: 'Add call logs', path: '/calls' },
         { text: 'Calls list', path: '/callLogs' },
+      ],
+    },
+    {
+      icon: 'fa-angle-up',
+      'icon-alt': 'fa-angle-down',
+      text: 'Leaves',
+      children: [
+        { text: 'Add leave records', path: '/leave' },
+        { text: 'Leaves list', path: '/leavesList' },
       ],
     },
 
