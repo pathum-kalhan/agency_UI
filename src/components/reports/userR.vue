@@ -1,24 +1,24 @@
 <template>
-  <v-layout row wrap justify-center>
-    <v-flex xs12 sm12 md6>
+  <v-layout row wrap>
+    <v-flex>
       <v-card>
-        <v-card-title color="red">
-          <h1>User Report</h1>
+        <v-card-title>
+          <h1>Users Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
-            <v-flex xs12 sm12 md12>
+            <v-flex xs12 sm12 md6>
               <v-autocomplete
                 label="Roles"
                 outline
-                :items="items"
-                item-text="role"
-                item-value="role"
+                :items="roles"
+                item-text="text"
+                item-value="text"
                 multiple
                 v-model="selectedRoles"
               ></v-autocomplete>
             </v-flex>
-            <v-flex xs12 sm12 md12>
+            <v-flex xs12 sm12 md6>
               <v-autocomplete
                 label="Order by"
                 outline
@@ -30,8 +30,8 @@
             </v-flex>
             <v-flex xs12 sm12 md12>
               <v-radio-group row v-model="status">
-                <v-radio label="Active" value="Active"></v-radio>
-                <v-radio label="Inactive" value="Inactive"></v-radio>
+                <v-radio label="Active" :value="true"></v-radio>
+                <v-radio label="Inactive" :value="false"></v-radio>
                 <v-radio label="All" value="All"></v-radio>
               </v-radio-group>
             </v-flex>
@@ -74,45 +74,50 @@ export default {
     return {
       json_fields: {
         Id: 'id',
-        'Full name': 'fullName',
+        Title: 'title',
+        'First Name': 'firstName',
+        'Last Name': 'lastName',
         Email: 'email',
         NIC: 'nic',
-        'Contact Number 1': 'contactNumber1',
-        'Contact Number 2': 'contactNumber2',
+        'Contact Numbers': 'contactNumbers',
         Address: 'address',
         Notes: 'notes',
         Role: 'role',
+        Birthday: 'birthday',
+        'Last seen': 'lastSeen',
+        'Is permanent': 'isPermanent',
+        'Joined date': 'joinedDate',
+        'Basic salary': 'basicSal',
         Status: 'status',
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
+
       },
       items: [],
       selectedRoles: ['admin'],
       orderByTypes: [
         { text: 'First Name Ascending', value: 'firstName' },
         { text: 'Last Name Descending', value: 'lastName DESC' },
-        { text: 'Created Date Ascending', value: 'createdAt' },
-        { text: 'Created Date Descending', value: 'createdAt DESC' },
+        { text: 'Created Date Ascending', value: 'DATE(createdAt)' },
+        { text: 'Created Date Descending', value: 'DATE(createdAt) DESC' },
       ],
       orderBy: 'firstName',
       alertType: 'error',
       alert: 'Error while loading the data from api...',
       hasAlert: false,
       status: 'All',
+      roles: [
+        {
+          text: 'admin',
+        },
+        { text: 'staff' },
+        {
+          text: 'manager',
+        },
+        { text: 'sales' },
+      ],
     };
   },
   methods: {
-    async GET() {
-      try {
-        const data = await this.$http.get('reports/roles');
 
-        this.items = data.data;
-      } catch (error) {
-        this.alertType = 'error';
-        this.alert = 'Error while loading the data from api...';
-        this.hasAlert = false;
-      }
-    },
     async POST() {
       try {
         const formData = {
@@ -128,7 +133,7 @@ export default {
           return;
         }
 
-        const data = await this.$http.post('/reports/user', formData);
+        const data = await this.$http.post('auth/report', formData);
         if (data.data.length === 0) {
           this.alertType = 'error';
           this.alert = 'No data available!';

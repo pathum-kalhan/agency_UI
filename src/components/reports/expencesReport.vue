@@ -1,23 +1,13 @@
 <template>
-  <v-layout row wrap justify-center>
-    <v-flex xs12 sm12 md6>
+  <v-layout row wrap>
+    <v-flex xs12 sm12 md12>
       <v-card>
         <v-card-title>
-          <h1>Fuel Report</h1>
+          <h1>Expences Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
-            <v-flex xs12 sm12 md12>
-              <v-autocomplete
-                label="Vehicle category"
-                outline
-                :items="items"
-                item-text="name"
-                item-value="id"
-                multiple
-                v-model="selectedCats"
-              ></v-autocomplete>
-            </v-flex>
+
             <v-flex xs12 sm12 md12>
               <v-autocomplete
                 label="Order by"
@@ -28,13 +18,15 @@
                 v-model="orderBy"
               ></v-autocomplete>
             </v-flex>
-            <v-flex xs12 sm12 md12>
-              <v-radio-group row v-model="status">
-                <v-radio label="Active vehicles" value="Active"></v-radio>
-                <v-radio label="Inactive vehicles" value="Inactive"></v-radio>
-                <v-radio label="All vehicles" value="All"></v-radio>
-              </v-radio-group>
+            <v-flex xs12 sm12 md6>
+              <v-subheader>Created From</v-subheader>
+              <v-date-picker  v-model="dateFrom" :max="maxDate" :landscape="true"></v-date-picker>
             </v-flex>
+            <v-flex xs12 sm12 md6>
+              <v-subheader>Created To</v-subheader>
+              <v-date-picker  v-model="dateTo" :max="maxDate" :landscape="true"></v-date-picker>
+            </v-flex>
+
           </v-layout>
         </v-card-text>
         <v-card-actions>
@@ -42,7 +34,7 @@
             class="btn"
             :fetch="POST"
             :fields="json_fields"
-            name="userReport.csv"
+            name="expencesReport.csv"
             type="csv"
             :style=" $v.$invalid ? 'pointer-events:none;' : 'pointer-events:auto;' "
           >Download Excel</JsonExcel>
@@ -58,49 +50,49 @@
 <script>
 import JsonExcel from 'vue-json-excel';
 import { required } from 'vuelidate/lib/validators';
-// vehicles.id,
-//     vehicles.make,
-//     vehicles.year,
-//     vehicles.color,
-//     vehicles.vin,
-//     vehicles.tankVolume,
-//     vehicles.fuelLevel,
-//     vehicles.fuelType,
-//     categories.name AS cat
+
+const dateGreaterThan = (value, vm) => {
+  const from = new Date(vm.dateFrom);
+  const to = new Date(value);
+  return from <= to;
+};
 export default {
   validations() {
     return {
-      selectedCats: { required },
+      dateFrom: { required },
+      dateTo: { required, dateGreaterThan },
       orderBy: { required },
-      status: { required },
+
     };
   },
   components: {
     JsonExcel,
   },
   mounted() {
-    this.GET();
+    this.maxDate = this.$moment().format('YYYY-MM-DD');
   },
   data() {
     return {
       json_fields: {
         Id: 'id',
-        Model: 'make',
-        Year: 'year',
-        Colour: 'color',
-        RegNumber: 'vin',
-        TankVolume: 'tankVolume',
-        FuelLevel: 'fuelLevel',
-        FuelType: 'fuelType',
-        Category: 'cat',
+        Amount: 'amount',
+        'Expenses Type': 'expensesType',
+        Notes: 'notes',
+        CreatedAt: 'createdAt',
+        UpdatedAt: 'updatedAt',
+
       },
       items: [],
-      selectedCats: [],
+      maxDate: '',
+      dateFrom: '',
+      dateTo: '',
       orderByTypes: [
-        { text: 'Fuel level High to Low', value: 'vehicles.fuelLevel DESC' },
-        { text: 'Fuel level Low to High', value: 'vehicles.fuelLevel' },
-        { text: 'Tank capacity High to Low', value: 'vehicles.tankVolume DESC' },
-        { text: 'Tank capacity Low to High', value: 'vehicles.tankVolume' },
+        { text: 'Amount', value: 'amount' },
+        { text: 'Amount Decending', value: 'amount DESC' },
+        { text: 'Expenses Type', value: 'expensesType' },
+        { text: 'Expenses Type Decending', value: 'expensesType DESC' },
+        { text: 'Created Date Ascending', value: 'DATE(createdAt)' },
+        { text: 'Created Date Descending', value: 'DATE(createdAt) DESC' },
       ],
       orderBy: 'fuelLevel',
       alertType: 'error',
@@ -110,22 +102,13 @@ export default {
     };
   },
   methods: {
-    async GET() {
-      try {
-        const data = await this.$http.get('category');
-        this.items = data.data;
-      } catch (error) {
-        this.alertType = 'error';
-        this.alert = 'Error while loading the data from api...';
-        this.hasAlert = false;
-      }
-    },
+
     async POST() {
       try {
         const formData = {
-          ids: this.selectedCats,
+          from: this.dateFrom,
+          to: this.dateTo,
           orderBy: this.orderBy,
-          status: this.status,
         };
 
         if (this.$v.$invalid) {
@@ -135,7 +118,7 @@ export default {
           return;
         }
 
-        const data = await this.$http.post('/reports/fuel', formData);
+        const data = await this.$http.post('expense/report', formData);
         if (data.data.length === 0) {
           this.alertType = 'error';
           this.alert = 'No data available!';

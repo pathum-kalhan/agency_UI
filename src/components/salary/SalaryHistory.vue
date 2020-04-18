@@ -24,7 +24,7 @@
               <td>
                 <v-btn
                   class="warning"
-                  @click="$router.push({path:'/item',query:{id:props.item.id}})"
+                  @click="$router.push({path:'/salary',query:{id:props.item.id}})"
                 >Update</v-btn>
               </td>
               <td>
@@ -94,16 +94,7 @@ export default {
         this.hasAlert = true;
       }
     },
-    async PUT(status, id) {
-      try {
-        await this.$http.put('item/status', { status: !status, id });
-        this.GET();
-      } catch (error) {
-        this.alertType = 'error';
-        this.alert = 'Status change failed!';
-        this.hasAlert = true;
-      }
-    },
+
     async onDelete(id) {
       try {
         await this.$http.delete(`salary/${id}`);

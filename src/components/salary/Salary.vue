@@ -5,7 +5,7 @@
         <v-card>
           <v-card-title>
             <h1 v-if="componetStatus">Generate salary</h1>
-            <h1 v-else>Update an item</h1>
+            <h1 v-else>Update salary record</h1>
           </v-card-title>
           <v-card-text>
             <v-layout row wrap>

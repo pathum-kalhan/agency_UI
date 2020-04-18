@@ -3,16 +3,26 @@
     <v-flex>
       <v-card>
         <v-card-title>
-          <h1>Customer Report</h1>
+          <h1>Customers Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
-            <v-flex xs12 sm12 md12>
+            <v-flex xs12 sm12 md6>
               <v-radio-group row v-model="status">
                 <v-radio label="Active" :value="true"></v-radio>
                 <v-radio label="Inactive" :value="false"></v-radio>
                 <v-radio label="All" value="All"></v-radio>
               </v-radio-group>
+            </v-flex>
+            <v-flex xs12 sm12 md6>
+              <v-autocomplete
+                label="Order by"
+                outline
+                :items="orderByTypes"
+                item-text="text"
+                item-value="value"
+                v-model="orderBy"
+              ></v-autocomplete>
             </v-flex>
 
             <v-flex xs12 sm12 md6>
@@ -30,7 +40,7 @@
             class="btn"
             :fetch="POST"
             :fields="json_fields"
-            name="customerReport.csv"
+            name="customersReport.csv"
             type="csv"
             :style=" $v.$invalid ? 'pointer-events:none;cursor: no-drop;' : 'pointer-events:auto;' "
           >Download Excel</JsonExcel>
@@ -47,7 +57,7 @@
 import JsonExcel from 'vue-json-excel';
 import { required } from 'vuelidate/lib/validators';
 
-const date_greather_than = (value, vm) => {
+const dateGreaterThan = (value, vm) => {
   const from = new Date(vm.dateFrom);
   const to = new Date(value);
   return from <= to;
@@ -55,7 +65,7 @@ const date_greather_than = (value, vm) => {
 export default {
   validations: {
     dateFrom: { required },
-    dateTo: { required, date_greather_than },
+    dateTo: { required, dateGreaterThan },
     status: { required },
   },
   components: {
@@ -72,11 +82,11 @@ export default {
         Id: 'id',
         Name: 'name',
         Email: 'email',
-        ContactPerson: 'contactPerson',
+        'Contact Person': 'contactPerson',
         Designation: 'designation',
         Address: 'address',
         Notes: 'notes',
-        CustomerType: 'customerType',
+        'Customer Type': 'customerType',
         Locality: 'locality',
         Status: 'status',
         CreatedAt: 'createdAt',
@@ -85,11 +95,20 @@ export default {
       items: [],
       selectedUsers: [],
       dateFrom: '',
+      dateTo: '',
       alertType: 'error',
-      alert: 'Error while loading the data from api...',
+      alert: 'Error while loading the data from API...',
       hasAlert: false,
       status: '',
-      dateTo: '',
+      orderByTypes: [
+        { text: 'Name Ascending', value: 'name' },
+        { text: 'Name Descending', value: 'name DESC' },
+        { text: 'Locality Ascending', value: 'locality' },
+        { text: 'Locality Descending', value: 'locality DESC' },
+        { text: 'Created Date Ascending', value: 'DATE(createdAt)' },
+        { text: 'Created Date Descending', value: 'DATE(createdAt) DESC' },
+      ],
+      orderBy: 'name',
     };
   },
   methods: {
@@ -110,6 +129,7 @@ export default {
           from: this.dateFrom,
           to: this.dateTo,
           status: this.status,
+          orderBy: this.orderBy,
         };
         if (this.$v.$invalid) {
           this.alertType = 'error';
@@ -117,7 +137,7 @@ export default {
           this.hasAlert = true;
           return;
         }
-        const data = await this.$http.post('/customer/report', formData);
+        const data = await this.$http.post('customer/report', formData);
         if (data.data.length === 0) {
           this.alertType = 'error';
           this.alert = 'No data available!';

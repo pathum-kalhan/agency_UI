@@ -354,9 +354,9 @@ export default {
         },
         { text: 'staff' },
         {
-          text: 'to',
+          text: 'manager',
         },
-        // { text: 'driver' },
+        { text: 'sales' },
       ],
       role: 'staff',
       alertType: 'error',

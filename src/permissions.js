@@ -96,10 +96,10 @@ module.exports = {
         { text: 'Audit report', path: '/auditR' },
 
         { text: 'User report', path: '/userR' },
-        { text: 'Attendance report', path: '/attendanceReport' },
-        { text: 'Call logs report', path: '/callLogsReport' },
         { text: 'Customer report', path: '/customerReport' },
         { text: 'Expenses report', path: '/expencesReport' },
+        { text: 'Attendance report', path: '/attendanceReport' },
+        { text: 'Call logs report', path: '/callLogsReport' },
 
         // { text: 'Fuel report', path: '/fuelR' },
         // { text: 'Maintenance report', path: '/maintaR' },
