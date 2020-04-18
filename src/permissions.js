@@ -75,6 +75,15 @@ module.exports = {
         { text: 'Leaves list', path: '/leavesList' },
       ],
     },
+    {
+      icon: 'fa-angle-up',
+      'icon-alt': 'fa-angle-down',
+      text: 'Salary',
+      children: [
+        { text: 'Generate salary', path: '/salary' },
+        { text: 'Salary history', path: '/salaryHistory' },
+      ],
+    },
 
     { icon: 'fas fa-key', text: 'Reset password', path: '/resetPassword' },
 

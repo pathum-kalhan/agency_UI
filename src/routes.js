@@ -2,8 +2,8 @@ import welcome from './components/common/welcome.vue';
 import dashboard from './components/dashboard.vue';
 import user from './components/user/user.vue';
 import viewUsers from './components/user/viewUsers.vue';
-import item from './components/item/item.vue';
-import itemList from './components/item/itemsList.vue';
+import salary from './components/salary/Salary.vue';
+import salaryHistory from './components/salary/SalaryHistory.vue';
 import job from './components/job/job.vue';
 import jobsList from './components/job/jobsList.vue';
 import attendance from './components/attendance/attendance.vue';
@@ -159,6 +159,22 @@ const routes = [
   }, {
     path: '/customerReport',
     component: customerReport,
+    meta: {
+      permissions: ['admin', 'manager'],
+
+    },
+  },
+  {
+    path: '/salary',
+    component: salary,
+    meta: {
+      permissions: ['admin', 'manager'],
+
+    },
+  },
+  {
+    path: '/salaryHistory',
+    component: salaryHistory,
     meta: {
       permissions: ['admin', 'manager'],
 

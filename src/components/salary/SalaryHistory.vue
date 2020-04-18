@@ -6,20 +6,21 @@
     <v-flex xs12 sm12 md12>
       <v-card>
         <v-card-title>
-          <h1>View and update items</h1>
+          <h1>Salaries history</h1>
         </v-card-title>
         <v-card-text>
 
           <v-text-field label="Search" v-model="search" outline></v-text-field>
+
           <v-data-table :items="items" :headers="headers" :search="search" disable-initial-sort  :pagination.sync="pagination">
             <template slot="items" slot-scope="props">
               <td>{{props.item.id}}</td>
-              <td>{{props.item.name}}</td>
-              <td>{{props.item.unit}}</td>
+              <td>{{props.item.user.fullName}}</td>
+              <td>{{props.item.basicSal}}</td>
 
-              <td>{{props.item.description}}</td>
-              <td>{{props.item.createdDate}}</td>
-              <td>{{props.item.updatedDate}}</td>
+              <td>{{props.item.allowance}}</td>
+              <td>{{props.item.sal}}</td>
+              <td>{{props.item.salaryMonth}}</td>
               <td>
                 <v-btn
                   class="warning"
@@ -28,11 +29,10 @@
               </td>
               <td>
                 <v-btn
-                  @click="PUT(props.item.status,props.item.id)"
-                  :class="{'error':props.item.status,'success':!props.item.status}"
+                  @click="onDelete(props.item.id)"
+                 class="error"
                 >
-                  <span v-if="props.item.status">Inactivate</span>
-                  <span v-else>Activate</span>
+                  delete
                 </v-btn>
               </td>
             </template>
@@ -57,16 +57,16 @@ export default {
       items: [],
       headers: [
         { text: 'Id', value: 'id' },
-        { text: 'Name', value: 'name' },
-        { text: 'Unit', value: 'unit' },
-        { text: 'Description', value: 'description' },
+        { text: 'Name', value: 'user.fullName' },
+        { text: 'Basic', value: 'basicSal' },
+        { text: 'Allowances', value: 'allowance' },
         {
-          text: 'createdAt',
-          value: 'createdAt',
+          text: 'Salary',
+          value: 'sal',
         },
         {
-          text: 'updatedAt',
-          value: 'updatedAt',
+          text: 'Month',
+          value: 'salaryMonth',
         },
         {
           text: 'Update',
@@ -74,8 +74,8 @@ export default {
           sortable: false,
         },
         {
-          text: 'Change status',
-          value: 'status',
+          text: 'Delete',
+          value: null,
         },
       ],
       alertType: 'error',
@@ -86,11 +86,11 @@ export default {
   methods: {
     async GET() {
       try {
-        const data = await this.$http.get('item');
+        const data = await this.$http.get('salary');
         this.items = data.data;
       } catch (error) {
         this.alertType = 'error';
-        this.alert = 'Error while loading the data from api...';
+        this.alert = 'Error while loading the data from API...';
         this.hasAlert = true;
       }
     },
@@ -102,6 +102,16 @@ export default {
         this.alertType = 'error';
         this.alert = 'Status change failed!';
         this.hasAlert = true;
+      }
+    },
+    async onDelete(id) {
+      try {
+        await this.$http.delete(`salary/${id}`);
+        this.GET();
+      } catch (error) {
+        this.alertType = 'error';
+        this.alert = 'Something went wrong.';
+        this.hasAlert = false;
       }
     },
   },

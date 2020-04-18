@@ -86,8 +86,6 @@ export default {
         this.hasAlert = false;
       }
     },
-
-
     async onDelete(id) {
       try {
         await this.$http.delete(`leave/${id}`);
