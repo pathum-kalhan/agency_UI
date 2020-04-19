@@ -99,9 +99,9 @@ module.exports = {
         { text: 'Customer report', path: '/customerReport' },
         { text: 'Expenses report', path: '/expencesReport' },
         { text: 'Attendance report', path: '/attendanceReport' },
+        { text: 'TnD report', path: '/tndR' },
         { text: 'Call logs report', path: '/callLogsReport' },
 
-        // { text: 'Fuel report', path: '/fuelR' },
         // { text: 'Maintenance report', path: '/maintaR' },
         // { text: 'Finance report', path: '/financeR' },
 

@@ -1,39 +1,42 @@
 <template>
   <v-layout row wrap justify-center>
-    <v-flex xs12 sm12 md8>
+    <v-flex xs12 sm12 md12>
       <v-card>
-        <v-card-title color="red">
-          <h1>Vehicle Report</h1>
+        <v-card-title>
+          <h1>Attendances Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
-            <v-flex xs12 sm12 md12>
-              <v-select
+            <v-flex xs12 sm12 md6>
+              <v-autocomplete :items="users"
+                    v-model="userId"
+                    label="Staff member"
+                    item-text="fullName"
+                    item-value="id"
+                    outline
+                    class="required"
+                    multiple
+                  ></v-autocomplete>
+            </v-flex>
+            <v-flex xs12 sm12 md6>
+              <v-autocomplete
+                label="Order by"
                 outline
-                label="Category"
-                v-model="selectedCats"
-                :items="categories"
-                item-text="name"
-                item-value="id"
-                multiple
-              ></v-select>
+                :items="orderByTypes"
+                item-text="text"
+                item-value="value"
+                v-model="orderBy"
+              ></v-autocomplete>
             </v-flex>
-            <v-flex xs12 sm12 md12>
-              <v-subheader class="required">Fuel type</v-subheader>
-              <v-radio-group v-model="fuelType" row>
-                <v-radio label="Petrol" value="petrol"></v-radio>
-                <v-radio label="Diesel" value="diesel"></v-radio>
-                <v-radio label="All" value="All"></v-radio>
-              </v-radio-group>
-            </v-flex>
+
 
             <v-flex xs12 sm12 md6>
               <v-subheader>Created From</v-subheader>
-              <v-date-picker  v-model="dateFrom" :max="maxDate"></v-date-picker>
+              <v-date-picker  v-model="dateFrom" :max="maxDate" landscape></v-date-picker>
             </v-flex>
             <v-flex xs12 sm12 md6>
               <v-subheader>Created To</v-subheader>
-              <v-date-picker  v-model="dateTo" :max="maxDate"></v-date-picker>
+              <v-date-picker  v-model="dateTo" :max="maxDate" landscape></v-date-picker>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -76,7 +79,7 @@ export default {
     fuelType: { required },
   },
   mounted() {
-    this.GET();
+    this.getUsers();
     this.maxDate = this.$moment().format('YYYY-MM-DD');
   },
   data() {
@@ -106,16 +109,27 @@ export default {
       categories: [],
       fuelType: '',
       dateTo: '',
+      users: [],
+      userId: '',
+      orderByTypes: [
+        { text: 'Name Ascending', value: 'name' },
+        { text: 'Name Descending', value: 'name DESC' },
+        { text: 'Locality Ascending', value: 'locality' },
+        { text: 'Locality Descending', value: 'locality DESC' },
+        { text: 'Created Date Ascending', value: 'DATE(createdAt)' },
+        { text: 'Created Date Descending', value: 'DATE(createdAt) DESC' },
+      ],
+      orderBy: 'name',
     };
   },
   methods: {
-    async GET() {
+    async getUsers() {
       try {
-        const data = await this.$http.get('category');
-        this.categories = data.data;
+        const data = await this.$http.get('auth');
+        this.users = data.data;
       } catch (error) {
         this.alertType = 'error';
-        this.alert = 'Error while loading the categories data from api...';
+        this.alert = 'Error while loading the users data from API...';
         this.hasAlert = false;
       }
     },

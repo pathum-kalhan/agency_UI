@@ -1,22 +1,22 @@
 <template>
-  <v-layout row wrap justify-center align-center>
-    <v-flex xs12 sm12 md8>
+  <v-layout row wrap>
+    <v-flex xs12 sm12 md12>
       <v-card>
         <v-card-title>
-          <h1>Audit Report</h1>
+          <h1>Audits Report</h1>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
             <v-flex xs12 sm12 md6>
               <v-subheader>From</v-subheader>
-              <v-date-picker  v-model="dateFrom" :max="maxDate"></v-date-picker>
+              <v-date-picker  v-model="dateFrom" :max="maxDate" landscape></v-date-picker>
             </v-flex>
             <v-flex xs12 sm12 md6>
               <v-subheader>To</v-subheader>
-              <v-date-picker  v-model="dateTo" :max="maxDate" :disabled="true"></v-date-picker>
+              <v-date-picker  v-model="dateTo" :max="maxDate" landscape></v-date-picker>
             </v-flex>
-            <v-flex xs12 sm12 md12>
-              <p style="color:red">From date should be greather than To date.</p>
+            <v-flex xs12 sm12 md6>
+
               <v-autocomplete
                 label="Users"
                 :items="items"
@@ -28,6 +28,16 @@
 
               ></v-autocomplete>
             </v-flex>
+            <v-flex xs12 sm12 md6>
+              <v-autocomplete
+                label="Order by"
+                outline
+                :items="orderByTypes"
+                item-text="text"
+                item-value="value"
+                v-model="orderBy"
+              ></v-autocomplete>
+            </v-flex>
           </v-layout>
         </v-card-text>
         <v-card-actions>
@@ -35,7 +45,7 @@
             class="btn"
             :fetch="POST"
             :fields="json_fields"
-            name="auditReport.csv"
+            name="auditsReport.csv"
             type="csv"
             :style=" $v.$invalid ? 'pointer-events:none;cursor: no-drop;' : 'pointer-events:auto;' "
           >Download Excel</JsonExcel>
@@ -52,7 +62,7 @@
 import JsonExcel from 'vue-json-excel';
 import { required } from 'vuelidate/lib/validators';
 
-const date_greather_than = (value, vm) => {
+const dateGreaterThan = (value, vm) => {
   const from = new Date(vm.dateFrom);
   const to = new Date(value);
   return from <= to;
@@ -61,8 +71,9 @@ const date_greather_than = (value, vm) => {
 export default {
   validations: {
     dateFrom: { required },
-    dateTo: { required, date_greather_than },
+    dateTo: { required, dateGreaterThan },
     selectedUsers: { required },
+    orderBy: { required },
   },
   components: {
     JsonExcel,
@@ -76,11 +87,11 @@ export default {
       maxDate: '',
       json_fields: {
         id: 'id',
-        'Full name': 'name',
+        'Full name': 'fullName',
         Area: 'area',
         Action: 'action',
         Description: 'description',
-        'Reference Id': 'refId',
+        'Reference Id': 'reference',
         CreatedAt: 'createdAt',
       },
       items: [],
@@ -88,19 +99,27 @@ export default {
       dateFrom: '',
       dateTo: '',
       alertType: 'error',
-      alert: 'Error while loading the data from api...',
+      alert: 'Error while loading the data from API...',
       hasAlert: false,
+      orderByTypes: [
+        { text: 'Area', value: 'area' },
+        { text: 'Area Descending', value: 'area DESC' },
+        { text: 'Action Ascending', value: 'audits.action' },
+        { text: 'Action Descending', value: 'audits.action DESC' },
+        { text: 'Created Date Ascending', value: 'DATE(audits.createdAt)' },
+        { text: 'Created Date Descending', value: 'DATE(audits.createdAt) DESC' },
+      ],
+      orderBy: 'area',
     };
   },
   methods: {
     async GET() {
       try {
-        const data = await this.$http.get('user');
-
+        const data = await this.$http.get('auth/all');
         this.items = data.data;
       } catch (error) {
         this.alertType = 'error';
-        this.alert = 'Error while loading the data from api...';
+        this.alert = 'Error while loading the data from API...';
         this.hasAlert = false;
       }
     },
@@ -110,6 +129,7 @@ export default {
           ids: this.selectedUsers,
           from: this.dateFrom,
           to: this.dateTo,
+          orderBy: this.orderBy,
         };
         if (this.$v.$invalid) {
           this.alertType = 'error';
@@ -117,7 +137,7 @@ export default {
           this.hasAlert = true;
           return;
         }
-        const data = await this.$http.post('/reports/audits', formData);
+        const data = await this.$http.post('audit/report', formData);
         if (data.data.length === 0) {
           this.alertType = 'error';
           this.alert = 'No data available!';
