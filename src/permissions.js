@@ -102,7 +102,7 @@ module.exports = {
         { text: 'TnD report', path: '/tndR' },
         { text: 'Call logs report', path: '/callLogsReport' },
 
-        // { text: 'Maintenance report', path: '/maintaR' },
+        { text: 'Salary report', path: '/salaryReport' },
         // { text: 'Finance report', path: '/financeR' },
 
         // { text: 'Summary report', path: '/summaryR' },

@@ -25,16 +25,16 @@ import LeavesList from './components/leaves/LeavesList.vue';
 
 
 // reports
-import categoryReport from './components/reports/categoryR.vue';
-import userR from './components/reports/userR.vue';
 import auditR from './components/reports/auditR.vue';
-import attendanceR from './components/reports/attendanceReport.vue';
+import userR from './components/reports/userR.vue';
 import customerReport from './components/reports/customerReport.vue';
 import expencesReport from './components/reports/expencesReport.vue';
+import attendanceR from './components/reports/attendanceReport.vue';
+import callLogsReport from './components/reports/callLogsReport.vue';
+import salaryReport from './components/reports/salaryR.vue';
 import maintaR from './components/reports/maintaR.vue';
 import financeR from './components/reports/financeR.vue';
 import summaryR from './components/reports/summaryR.vue';
-import callLogsReport from './components/reports/callLogsReport.vue';
 
 import backupDb from './components/backupDb.vue';
 
@@ -128,8 +128,8 @@ const routes = [
 
   },
   {
-    path: '/categoryR',
-    component: categoryReport,
+    path: '/salaryReport',
+    component: salaryReport,
     meta: {
       permissions: ['admin', 'manager'],
 
